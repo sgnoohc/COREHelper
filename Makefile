@@ -5,7 +5,7 @@ include Makefile.arch
 #
 SOURCES=$(wildcard *.cc)
 OBJECTS=$(SOURCES:.cc=.o)
-LIB=corehelper.so
+LIB=COREHelper.so
 
 #
 # how to make it 
