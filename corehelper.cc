@@ -499,7 +499,7 @@ void CORE2016::setIsoTrackBranches(RooUtil::TTreeX* ttree)
         if (cand_pt < 5) { continue; }
         // isotrack a la MT2
         int pdgId = abs(cms3.pfcands_particleId().at(pfind));
-        float absiso03 = cms3.pfcands_trackIso().at(pfind);
+        float absiso03 = TrackIso(pfind, 0.3, 0.0, true, false);
         if (absiso03 < min(0.2 * cand_pt, 8.0))
         {
             if ((cand_pt > 5.) && (pdgId == 11 || pdgId == 13))
