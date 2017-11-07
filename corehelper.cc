@@ -338,8 +338,11 @@ void CORE2016::createLeptonBranches(RooUtil::TTreeX* ttree, std::vector<std::pai
     // Set the lepton_ids
     lepton_ids = ids;
 
-    ttree->createBranch<std::vector<LV    >>( "lep_p4"    );
-    ttree->createBranch<std::vector<Int_t >>( "lep_pdgId" );
+    ttree->createBranch<std::vector<LV     >>( "lep_p4"    );
+    ttree->createBranch<std::vector<Int_t  >>( "lep_pdgId" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var11" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var8" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var5" );
 
     for ( auto& id : lepton_ids )
         ttree->createBranch<std::vector<Int_t>>( "lep_pass_" + id.second );
@@ -359,7 +362,14 @@ void CORE2016::setLeptonBranches(RooUtil::TTreeX* ttree)
     for ( auto& id : lepton_ids )
         v_int_br_name.push_back( id.second );
 
-    ttree->sortVecBranchesByPt( "lep_p4", {}, v_int_br_name, {} );
+    // Sorting leptons float variables
+    std::vector<TString> v_float_br_name;
+
+    v_float_br_name.push_back( "lep_bdt_muiso_var11" );
+    v_float_br_name.push_back( "lep_bdt_muiso_var8" );
+    v_float_br_name.push_back( "lep_bdt_muiso_var5" );
+
+    ttree->sortVecBranchesByPt( "lep_p4", v_float_br_name, v_int_br_name, {} );
 }
 
 //_________________________________________________________________________________________________
@@ -395,6 +405,9 @@ void CORE2016::setElectronBranches(RooUtil::TTreeX* ttree)
         // If you are here, the lepton is now accepted. Add to the collection
         ttree->pushbackToBranch<LV   >( "lep_p4", cms3.els_p4()[iel] );
         ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.els_charge()[iel] * -11 );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var11", -999 );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var8", -999 );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var5", -999 );
 
         // Also loop over IDs and flag whether this lepton passed or failed
         for ( unsigned int ith_id = 0; ith_id < lepton_ids.size(); ++ith_id )
@@ -446,6 +459,9 @@ void CORE2016::setMuonBranches(RooUtil::TTreeX* ttree)
         // If you are here, the lepton is now accepted. Add to the collection
         ttree->pushbackToBranch<LV   >( "lep_p4", cms3.mus_p4()[imu] );
         ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.mus_charge()[imu] * -11 );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var11", reader_muiso_var11.evaluate(imu) );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var8", reader_muiso_var8.evaluate(imu) );
+        ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var5", reader_muiso_var5.evaluate(imu) );
 
         // Also loop over IDs and flag whether this lepton passed or failed
         for ( unsigned int ith_id = 0; ith_id < lepton_ids.size(); ++ith_id )
