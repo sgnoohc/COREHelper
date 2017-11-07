@@ -43,6 +43,12 @@ void CORE2016::initializeCORE(TString option_)
     // -~-~-~-~-~-
     option = option_;
 
+    // -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+    // If ANALYSIS_BASE is not set set it to current directory
+    // -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+    if (TString(gSystem->Getenv("ANALYSIS_BASE")).IsNull())
+        gSystem->Setenv("ANALYSIS_BASE", ".");
+
     // -~-~-~-~-~-~-~-~
     // Electron ID tool
     // -~-~-~-~-~-~-~-~
@@ -245,10 +251,11 @@ void CORE2016::createEventBranches(RooUtil::TTreeX* ttree)
     ttree->createBranch<Int_t   >( "evt_event" );
     ttree->createBranch<Int_t   >( "evt_isRealData" );
     ttree->createBranch<Int_t   >( "evt_passgoodrunlist" );
-    ttree->createBranch<Float_t >( "evt_scale1fb" );
-    ttree->createBranch<Float_t >( "evt_xsec" );
-    ttree->createBranch<Float_t >( "evt_kfactor" );
-    ttree->createBranch<Float_t >( "evt_filt_eff" );
+    ttree->createBranch<Float_t >( "genps_weight" );
+//    ttree->createBranch<Float_t >( "evt_scale1fb" );
+//    ttree->createBranch<Float_t >( "evt_xsec" );
+//    ttree->createBranch<Float_t >( "evt_kfactor" );
+//    ttree->createBranch<Float_t >( "evt_filt_eff" );
 }
 
 //_________________________________________________________________________________________________
@@ -260,10 +267,11 @@ void CORE2016::setEventBranches(RooUtil::TTreeX* ttree)
     ttree->setBranch<Int_t   >( "evt_event", cms3.evt_event() );
     ttree->setBranch<Int_t   >( "evt_isRealData", cms3.evt_isRealData() );
     ttree->setBranch<Int_t   >( "evt_passgoodrunlist", cms3.evt_isRealData() ? goodrun(cms3.evt_run(), cms3.evt_lumiBlock()) : 1. );
-    ttree->setBranch<Float_t >( "evt_scale1fb", cms3.evt_scale1fb() );
-    ttree->setBranch<Float_t >( "evt_xsec", cms3.evt_xsec_incl() );
-    ttree->setBranch<Float_t >( "evt_kfactor", cms3.evt_kfactor() );
-    ttree->setBranch<Float_t >( "evt_filt_eff", cms3.evt_filt_eff() );
+    ttree->setBranch<Float_t >( "genps_weight", cms3.genps_weight() );
+//    ttree->setBranch<Float_t >( "evt_scale1fb", cms3.evt_scale1fb() );
+//    ttree->setBranch<Float_t >( "evt_xsec", cms3.evt_xsec_incl() );
+//    ttree->setBranch<Float_t >( "evt_kfactor", cms3.evt_kfactor() );
+//    ttree->setBranch<Float_t >( "evt_filt_eff", cms3.evt_filt_eff() );
 }
 
 //_________________________________________________________________________________________________
@@ -636,13 +644,13 @@ void CORE2016::createFatJetBranches( RooUtil::TTreeX* ttree )
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau1"      );
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau2"      );
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau3"      );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_topMass"             );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_minMass"             );
-    ttree->createBranch<std::vector<Int_t  >>( "ak8jets_nSubJets"            );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_prunedMass"          );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_trimmedMass"         );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_filteredMass"        );
-    ttree->createBranch<std::vector<Float_t>>( "ak8jets_softdropMass"        );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_topMass"             );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_minMass"             );
+//    ttree->createBranch<std::vector<Int_t  >>( "ak8jets_nSubJets"            );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_prunedMass"          );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_trimmedMass"         );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_filteredMass"        );
+//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_softdropMass"        );
 //    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau1" );
 //    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau2" );
 //    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau3" );
@@ -670,13 +678,13 @@ void CORE2016::setFatJetBranches( RooUtil::TTreeX* ttree )
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau1"      , cms3.ak8jets_nJettinessTau1()[ifatjet]      );
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau2"      , cms3.ak8jets_nJettinessTau2()[ifatjet]      );
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau3"      , cms3.ak8jets_nJettinessTau3()[ifatjet]      );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_topMass"             , cms3.ak8jets_topMass()[ifatjet]             );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_minMass"             , cms3.ak8jets_minMass()[ifatjet]             );
-        ttree->pushbackToBranch<Int_t  >( "ak8jets_nSubJets"            , cms3.ak8jets_nSubJets()[ifatjet]            );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_prunedMass"          , cms3.ak8jets_prunedMass()[ifatjet]          );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_trimmedMass"         , cms3.ak8jets_trimmedMass()[ifatjet]         );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_filteredMass"        , cms3.ak8jets_filteredMass()[ifatjet]        );
-        ttree->pushbackToBranch<Float_t>( "ak8jets_softdropMass"        , cms3.ak8jets_softdropMass()[ifatjet]        );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_topMass"             , cms3.ak8jets_topMass()[ifatjet]             );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_minMass"             , cms3.ak8jets_minMass()[ifatjet]             );
+//        ttree->pushbackToBranch<Int_t  >( "ak8jets_nSubJets"            , cms3.ak8jets_nSubJets()[ifatjet]            );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_prunedMass"          , cms3.ak8jets_prunedMass()[ifatjet]          );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_trimmedMass"         , cms3.ak8jets_trimmedMass()[ifatjet]         );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_filteredMass"        , cms3.ak8jets_filteredMass()[ifatjet]        );
+//        ttree->pushbackToBranch<Float_t>( "ak8jets_softdropMass"        , cms3.ak8jets_softdropMass()[ifatjet]        );
 //        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau1" , cms3.ak8jets_puppinJettinessTau1()[ifatjet] );
 //        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau2" , cms3.ak8jets_puppinJettinessTau2()[ifatjet] );
 //        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau3" , cms3.ak8jets_puppinJettinessTau3()[ifatjet] );
@@ -724,6 +732,13 @@ void CORE2016::setTrigBranches( RooUtil::TTreeX* ttree )
 //    ttree->setBranch<TBits               >( "hlt_bits"     , cms3.hlt_bits()      );
     for ( auto& pair_trigname : triggers )
         ttree->setBranch<Int_t>( "pass_trig_" + pair_trigname.first, passHLTTriggerPattern( pair_trigname.second ) );
+}
+
+//_________________________________________________________________________________________________
+int CORE2016::nCount( RooUtil::TTreeX* ttree, TString bn )
+{
+    const std::vector<Int_t> &v = ttree->getBranch<std::vector<Int_t>>(bn);
+    return std::count_if(v.begin(), v.end(), [](Int_t i){return i == 1;});
 }
 
 //eof

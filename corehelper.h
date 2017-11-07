@@ -119,6 +119,8 @@ class CORE2016
         void setFatJetBranches(RooUtil::TTreeX* ttree);
         void createTrigBranches(RooUtil::TTreeX* ttree, std::vector<TString>);
         void setTrigBranches(RooUtil::TTreeX* ttree);
+
+        int nCount(RooUtil::TTreeX* ttree, TString bn);
 };
 
 #endif
