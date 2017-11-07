@@ -19,7 +19,7 @@ inline bool sortByValue( const std::pair<int, float>& pair1, const std::pair<int
 
 
 //_________________________________________________________________________________________________
-RooUtil::CORE2016::CORE2016()
+CORE2016::CORE2016()
 {
     jet_corrector_pfL1FastJetL2L3_current       = NULL;
     jecUnc_current                              = NULL;
@@ -30,12 +30,12 @@ RooUtil::CORE2016::CORE2016()
 }
 
 //_________________________________________________________________________________________________
-RooUtil::CORE2016::~CORE2016()
+CORE2016::~CORE2016()
 {
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::initializeCORE(TString option_)
+void CORE2016::initializeCORE(TString option_)
 {
 
     // -~-~-~-~-~-
@@ -214,7 +214,7 @@ void RooUtil::CORE2016::initializeCORE(TString option_)
 }
 
 //_________________________________________________________________________________________________
-int RooUtil::CORE2016::getCMS3Version()
+int CORE2016::getCMS3Version()
 {
     TString cms3_version = cms3.evt_CMS3tag()[0];
     // convert last two digits of version number to int
@@ -223,7 +223,7 @@ int RooUtil::CORE2016::getCMS3Version()
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setJetCorrector()
+void CORE2016::setJetCorrector()
 {
     // set jet corrector based on run number for data
     if (cms3.evt_isRealData() && cms3.evt_run() >= 278802 && cms3.evt_run() <= 278808) {
@@ -237,7 +237,7 @@ void RooUtil::CORE2016::setJetCorrector()
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createEventBranches(TTreeX* ttree)
+void CORE2016::createEventBranches(RooUtil::TTreeX* ttree)
 {
     // Event info related
     ttree->createBranch<Int_t   >( "evt_run" );
@@ -252,7 +252,7 @@ void RooUtil::CORE2016::createEventBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setEventBranches(TTreeX* ttree)
+void CORE2016::setEventBranches(RooUtil::TTreeX* ttree)
 {
     // Event info related
     ttree->setBranch<Int_t   >( "evt_run", cms3.evt_run() );
@@ -267,21 +267,21 @@ void RooUtil::CORE2016::setEventBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createPileUpBranches(TTreeX* ttree)
+void CORE2016::createPileUpBranches(RooUtil::TTreeX* ttree)
 {
     // PileUp info related
     ttree->createBranch<Float_t >( "evt_rho" );
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setPileUpBranches(TTreeX* ttree)
+void CORE2016::setPileUpBranches(RooUtil::TTreeX* ttree)
 {
     // PileUp info related
     ttree->setBranch<Float_t >( "evt_rho", cms3.evt_fixgridfastjet_all_rho() );
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createMETBranches(TTreeX* ttree)
+void CORE2016::createMETBranches(RooUtil::TTreeX* ttree)
 {
     // MET variables
     ttree->createBranch<Float_t >( "gen_met" );
@@ -291,7 +291,7 @@ void RooUtil::CORE2016::createMETBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setMETBranches(TTreeX* ttree)
+void CORE2016::setMETBranches(RooUtil::TTreeX* ttree)
 {
     // MET variables
     ttree->setBranch<Float_t >( "gen_met", cms3.gen_met() );
@@ -319,7 +319,7 @@ void RooUtil::CORE2016::setMETBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createLeptonBranches(TTreeX* ttree, std::vector<std::pair<id_level_t, TString>> ids)
+void CORE2016::createLeptonBranches(RooUtil::TTreeX* ttree, std::vector<std::pair<id_level_t, TString>> ids)
 {
 
     // four vectors of the leptons
@@ -338,7 +338,7 @@ void RooUtil::CORE2016::createLeptonBranches(TTreeX* ttree, std::vector<std::pai
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setLeptonBranches(TTreeX* ttree)
+void CORE2016::setLeptonBranches(RooUtil::TTreeX* ttree)
 {
     setElectronBranches(ttree);
     setMuonBranches(ttree);
@@ -355,7 +355,7 @@ void RooUtil::CORE2016::setLeptonBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setElectronBranches(TTreeX* ttree)
+void CORE2016::setElectronBranches(RooUtil::TTreeX* ttree)
 {
 
     // List of LVs of leptons for this event
@@ -406,7 +406,7 @@ void RooUtil::CORE2016::setElectronBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setMuonBranches(TTreeX* ttree)
+void CORE2016::setMuonBranches(RooUtil::TTreeX* ttree)
 {
 
     // List of LVs of leptons for this event
@@ -457,7 +457,7 @@ void RooUtil::CORE2016::setMuonBranches(TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createJetBranches( TTreeX* ttree )
+void CORE2016::createJetBranches( RooUtil::TTreeX* ttree )
 {
     ttree->createBranch<std::vector<LV     >>( "jets_p4" );
     ttree->createBranch<std::vector<Float_t>>( "jets_csv" );
@@ -469,7 +469,7 @@ void RooUtil::CORE2016::createJetBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setJetBranches( TTreeX* ttree )
+void CORE2016::setJetBranches( RooUtil::TTreeX* ttree )
 {
     //JETS
     //correct jets and check baseline selections
@@ -600,7 +600,7 @@ void RooUtil::CORE2016::setJetBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createGenBranches( TTreeX* ttree )
+void CORE2016::createGenBranches( RooUtil::TTreeX* ttree )
 {
     ttree->createBranch<std::vector<LV   >>( "gen_p4" );
     ttree->createBranch<std::vector<Int_t>>( "gen_pdgId" );
@@ -611,7 +611,7 @@ void RooUtil::CORE2016::createGenBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setGenBranches( TTreeX* ttree )
+void CORE2016::setGenBranches( RooUtil::TTreeX* ttree )
 {
     for ( unsigned int igen = 0; igen < cms3.genps_p4().size(); ++igen )
     {
@@ -625,7 +625,7 @@ void RooUtil::CORE2016::setGenBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createFatJetBranches( TTreeX* ttree )
+void CORE2016::createFatJetBranches( RooUtil::TTreeX* ttree )
 {
     // product of this EDProducer
     ttree->createBranch<std::vector<LV     >>( "ak8jets_p4"                  );
@@ -658,7 +658,7 @@ void RooUtil::CORE2016::createFatJetBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setFatJetBranches( TTreeX* ttree )
+void CORE2016::setFatJetBranches( RooUtil::TTreeX* ttree )
 {
     for ( unsigned int ifatjet = 0; ifatjet < cms3.ak8jets_p4().size(); ++ifatjet )
     {
@@ -691,7 +691,7 @@ void RooUtil::CORE2016::setFatJetBranches( TTreeX* ttree )
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::createTrigBranches( TTreeX* ttree, std::vector<TString> trigger_patterns_ )
+void CORE2016::createTrigBranches( RooUtil::TTreeX* ttree, std::vector<TString> trigger_patterns_ )
 {
 //    ttree->createBranch<std::vector<TString>>( "hlt_trigNames" );
 //    ttree->createBranch<TBits               >( "hlt_bits"      );
@@ -718,7 +718,7 @@ void RooUtil::CORE2016::createTrigBranches( TTreeX* ttree, std::vector<TString> 
 }
 
 //_________________________________________________________________________________________________
-void RooUtil::CORE2016::setTrigBranches( TTreeX* ttree )
+void CORE2016::setTrigBranches( RooUtil::TTreeX* ttree )
 {
 //    ttree->setBranch<std::vector<TString>>( "hlt_trigNames", cms3.hlt_trigNames() );
 //    ttree->setBranch<TBits               >( "hlt_bits"     , cms3.hlt_bits()      );

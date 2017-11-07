@@ -54,6 +54,8 @@ using namespace tas;
 
 // RooUtil
 #include "../rooutil/ttreex.h"
+#include "../rooutil/printutil.h"
+using namespace RooUtil;
 
 //#define MAP std::unordered_map
 //#define STRING std::string
@@ -66,13 +68,10 @@ using namespace tas;
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<float> > LV;
 typedef std::vector<LV> LVs;
 
-namespace RooUtil
+class CORE2016
 {
 
-    class CORE2016
-    {
-
-        public:
+    public:
         CORE2016();
         ~CORE2016();
 
@@ -102,26 +101,24 @@ namespace RooUtil
         void initializeCORE(TString option);
         static int getCMS3Version();
         void setJetCorrector();
-        void createEventBranches(TTreeX* ttree);
-        void setEventBranches(TTreeX* ttree);
-        void createPileUpBranches(TTreeX* ttree);
-        void setPileUpBranches(TTreeX* ttree);
-        void createMETBranches(TTreeX* ttree);
-        void setMETBranches(TTreeX* ttree);
-        void createLeptonBranches(TTreeX* ttree, std::vector<std::pair<id_level_t, TString>>);
-        void setLeptonBranches(TTreeX* ttree);
-        void setElectronBranches(TTreeX* ttree);
-        void setMuonBranches(TTreeX* ttree);
-        void createJetBranches(TTreeX* ttree);
-        void setJetBranches(TTreeX* ttree);
-        void createGenBranches(TTreeX* ttree);
-        void setGenBranches(TTreeX* ttree);
-        void createFatJetBranches(TTreeX* ttree);
-        void setFatJetBranches(TTreeX* ttree);
-        void createTrigBranches(TTreeX* ttree, std::vector<TString>);
-        void setTrigBranches(TTreeX* ttree);
-    };
-
-}
+        void createEventBranches(RooUtil::TTreeX* ttree);
+        void setEventBranches(RooUtil::TTreeX* ttree);
+        void createPileUpBranches(RooUtil::TTreeX* ttree);
+        void setPileUpBranches(RooUtil::TTreeX* ttree);
+        void createMETBranches(RooUtil::TTreeX* ttree);
+        void setMETBranches(RooUtil::TTreeX* ttree);
+        void createLeptonBranches(RooUtil::TTreeX* ttree, std::vector<std::pair<id_level_t, TString>>);
+        void setLeptonBranches(RooUtil::TTreeX* ttree);
+        void setElectronBranches(RooUtil::TTreeX* ttree);
+        void setMuonBranches(RooUtil::TTreeX* ttree);
+        void createJetBranches(RooUtil::TTreeX* ttree);
+        void setJetBranches(RooUtil::TTreeX* ttree);
+        void createGenBranches(RooUtil::TTreeX* ttree);
+        void setGenBranches(RooUtil::TTreeX* ttree);
+        void createFatJetBranches(RooUtil::TTreeX* ttree);
+        void setFatJetBranches(RooUtil::TTreeX* ttree);
+        void createTrigBranches(RooUtil::TTreeX* ttree, std::vector<TString>);
+        void setTrigBranches(RooUtil::TTreeX* ttree);
+};
 
 #endif
