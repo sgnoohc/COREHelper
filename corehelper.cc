@@ -481,6 +481,46 @@ void CORE2016::setMuonBranches(RooUtil::TTreeX* ttree)
 }
 
 //_________________________________________________________________________________________________
+void CORE2016::createIsoTrackBranches( RooUtil::TTreeX* ttree )
+{
+    ttree->createBranch<std::vector<LV     >>( "isotrk_p4"    );
+}
+
+//_________________________________________________________________________________________________
+void CORE2016::setIsoTrackBranches(RooUtil::TTreeX* ttree)
+{
+    for (size_t pfind = 0; pfind < cms3.pfcands_p4().size(); pfind++)
+    {
+        LorentzVector pfcand_p4 = cms3.pfcands_p4().at(pfind);
+        if (cms3.pfcands_charge().at(pfind)  == 0) { continue; }
+        if (fabs(cms3.pfcands_dz().at(pfind)) >  0.1) { continue; }
+        if (cms3.pfcands_fromPV().at(pfind)  <= 1) { continue; }
+        float cand_pt = pfcand_p4.pt();
+        if (cand_pt < 5) { continue; }
+        // isotrack a la MT2
+        int pdgId = abs(cms3.pfcands_particleId().at(pfind));
+        float absiso03 = cms3.pfcands_trackIso().at(pfind);
+        if (absiso03 < min(0.2 * cand_pt, 8.0))
+        {
+            if ((cand_pt > 5.) && (pdgId == 11 || pdgId == 13))
+            {
+                if (absiso03 / cand_pt < 0.2)
+                {
+                    ttree->pushbackToBranch<LV>("isotrk_p4", pfcand_p4);
+                }
+            }
+            if (cand_pt > 10. && pdgId == 211)
+            {
+                if (absiso03 / cand_pt < 0.1)
+                {
+                    ttree->pushbackToBranch<LV>("isotrk_p4", pfcand_p4);
+                }
+            }
+        }
+    }
+}
+
+//_________________________________________________________________________________________________
 void CORE2016::createJetBranches( RooUtil::TTreeX* ttree )
 {
     ttree->createBranch<std::vector<LV     >>( "jets_p4" );

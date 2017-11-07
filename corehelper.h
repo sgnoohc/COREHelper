@@ -111,6 +111,8 @@ class CORE2016
         void setLeptonBranches(RooUtil::TTreeX* ttree);
         void setElectronBranches(RooUtil::TTreeX* ttree);
         void setMuonBranches(RooUtil::TTreeX* ttree);
+        void createIsoTrackBranches(RooUtil::TTreeX* ttree);
+        void setIsoTrackBranches(RooUtil::TTreeX* ttree);
         void createJetBranches(RooUtil::TTreeX* ttree);
         void setJetBranches(RooUtil::TTreeX* ttree);
         void createGenBranches(RooUtil::TTreeX* ttree);
