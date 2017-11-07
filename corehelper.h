@@ -45,6 +45,7 @@
 #include "../CORE/JetSelections.h"
 #include "../CORE/MetSelections.h"
 #include "../CORE/IsolationTools.h"
+#include "../CORE/IsoTrackVeto.h"
 #include "../CORE/MCSelections.h"
 #include "../CORE/Tools/goodrun.h"
 #include "../CORE/Tools/JetCorrector.h"
