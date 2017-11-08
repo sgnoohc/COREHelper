@@ -252,10 +252,13 @@ void CORE2016::createEventBranches(RooUtil::TTreeX* ttree)
     ttree->createBranch<Int_t   >( "evt_isRealData" );
     ttree->createBranch<Int_t   >( "evt_passgoodrunlist" );
     ttree->createBranch<Float_t >( "genps_weight" );
-//    ttree->createBranch<Float_t >( "evt_scale1fb" );
-//    ttree->createBranch<Float_t >( "evt_xsec" );
-//    ttree->createBranch<Float_t >( "evt_kfactor" );
-//    ttree->createBranch<Float_t >( "evt_filt_eff" );
+    if (isCMSX(3))
+    {
+        ttree->createBranch<Float_t >( "evt_scale1fb" );
+        ttree->createBranch<Float_t >( "evt_xsec" );
+        ttree->createBranch<Float_t >( "evt_kfactor" );
+        ttree->createBranch<Float_t >( "evt_filt_eff" );
+    }
 }
 
 //_________________________________________________________________________________________________
@@ -268,10 +271,13 @@ void CORE2016::setEventBranches(RooUtil::TTreeX* ttree)
     ttree->setBranch<Int_t   >( "evt_isRealData", cms3.evt_isRealData() );
     ttree->setBranch<Int_t   >( "evt_passgoodrunlist", cms3.evt_isRealData() ? goodrun(cms3.evt_run(), cms3.evt_lumiBlock()) : 1. );
     ttree->setBranch<Float_t >( "genps_weight", cms3.genps_weight() );
-//    ttree->setBranch<Float_t >( "evt_scale1fb", cms3.evt_scale1fb() );
-//    ttree->setBranch<Float_t >( "evt_xsec", cms3.evt_xsec_incl() );
-//    ttree->setBranch<Float_t >( "evt_kfactor", cms3.evt_kfactor() );
-//    ttree->setBranch<Float_t >( "evt_filt_eff", cms3.evt_filt_eff() );
+    if (isCMSX(3))
+    {
+        ttree->setBranch<Float_t >( "evt_scale1fb", cms3.evt_scale1fb() );
+        ttree->setBranch<Float_t >( "evt_xsec", cms3.evt_xsec_incl() );
+        ttree->setBranch<Float_t >( "evt_kfactor", cms3.evt_kfactor() );
+        ttree->setBranch<Float_t >( "evt_filt_eff", cms3.evt_filt_eff() );
+    }
 }
 
 //_________________________________________________________________________________________________
@@ -340,9 +346,16 @@ void CORE2016::createLeptonBranches(RooUtil::TTreeX* ttree, std::vector<std::pai
 
     ttree->createBranch<std::vector<LV     >>( "lep_p4"    );
     ttree->createBranch<std::vector<Int_t  >>( "lep_pdgId" );
+    ttree->createBranch<std::vector<Int_t  >>( "lep_3ch_agree" );
+    ttree->createBranch<std::vector<Int_t  >>( "lep_triggersafe_v1" );
+    ttree->createBranch<std::vector<Int_t  >>( "lep_triggersafe_v2" );
     ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var11" );
     ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var8" );
     ttree->createBranch<std::vector<Float_t>>( "lep_bdt_muiso_var5" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_ip3d" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_dxy" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_dz" );
+    ttree->createBranch<std::vector<Float_t>>( "lep_reliso03" );
 
     for ( auto& id : lepton_ids )
         ttree->createBranch<std::vector<Int_t>>( "lep_pass_" + id.second );
@@ -358,6 +371,9 @@ void CORE2016::setLeptonBranches(RooUtil::TTreeX* ttree)
     std::vector<TString> v_int_br_name;
 
     v_int_br_name.push_back( "lep_pdgId" );
+    v_int_br_name.push_back( "lep_3ch_agree" );
+    v_int_br_name.push_back( "lep_triggersafe_v1" );
+    v_int_br_name.push_back( "lep_triggersafe_v2" );
 
     for ( auto& id : lepton_ids )
         v_int_br_name.push_back( id.second );
@@ -368,6 +384,10 @@ void CORE2016::setLeptonBranches(RooUtil::TTreeX* ttree)
     v_float_br_name.push_back( "lep_bdt_muiso_var11" );
     v_float_br_name.push_back( "lep_bdt_muiso_var8" );
     v_float_br_name.push_back( "lep_bdt_muiso_var5" );
+    v_float_br_name.push_back( "lep_ip3d" );
+    v_float_br_name.push_back( "lep_dxy" );
+    v_float_br_name.push_back( "lep_dz" );
+    v_float_br_name.push_back( "lep_reliso03" );
 
     ttree->sortVecBranchesByPt( "lep_p4", v_float_br_name, v_int_br_name, {} );
 }
@@ -405,9 +425,16 @@ void CORE2016::setElectronBranches(RooUtil::TTreeX* ttree)
         // If you are here, the lepton is now accepted. Add to the collection
         ttree->pushbackToBranch<LV   >( "lep_p4", cms3.els_p4()[iel] );
         ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.els_charge()[iel] * -11 );
+        ttree->pushbackToBranch<Int_t>( "lep_3ch_agree", threeChargeAgree(iel) );
+        ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v1", isTriggerSafe_v1(iel) );
+        ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v2", isTriggerSafe_v2(iel) );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var11", -999 );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var8", -999 );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var5", -999 );
+        ttree->pushbackToBranch<Float_t>( "lep_ip3d", cms3.els_ip3d()[iel] );
+        ttree->pushbackToBranch<Float_t>( "lep_dxy", cms3.els_dxyPV()[iel] );
+        ttree->pushbackToBranch<Float_t>( "lep_dz", cms3.els_dzPV()[iel] );
+        ttree->pushbackToBranch<Float_t>( "lep_reliso03", eleRelIso03EA(iel, 2) );
 
         // Also loop over IDs and flag whether this lepton passed or failed
         for ( unsigned int ith_id = 0; ith_id < lepton_ids.size(); ++ith_id )
@@ -459,9 +486,16 @@ void CORE2016::setMuonBranches(RooUtil::TTreeX* ttree)
         // If you are here, the lepton is now accepted. Add to the collection
         ttree->pushbackToBranch<LV   >( "lep_p4", cms3.mus_p4()[imu] );
         ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.mus_charge()[imu] * -11 );
+        ttree->pushbackToBranch<Int_t>( "lep_3ch_agree", -999 );
+        ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v1", -999 );
+        ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v2", -999 );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var11", reader_muiso_var11.evaluate(imu) );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var8", reader_muiso_var8.evaluate(imu) );
         ttree->pushbackToBranch<Float_t>( "lep_bdt_muiso_var5", reader_muiso_var5.evaluate(imu) );
+        ttree->pushbackToBranch<Float_t>( "lep_ip3d", cms3.mus_ip3d()[imu] );
+        ttree->pushbackToBranch<Float_t>( "lep_dxy", cms3.mus_dxyPV()[imu] );
+        ttree->pushbackToBranch<Float_t>( "lep_dz", cms3.mus_dzPV()[imu] );
+        ttree->pushbackToBranch<Float_t>( "lep_rmuiso03", muRelIso03EA(imu, 2) );
 
         // Also loop over IDs and flag whether this lepton passed or failed
         for ( unsigned int ith_id = 0; ith_id < lepton_ids.size(); ++ith_id )
@@ -700,24 +734,27 @@ void CORE2016::createFatJetBranches( RooUtil::TTreeX* ttree )
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau1"      );
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau2"      );
     ttree->createBranch<std::vector<Float_t>>( "ak8jets_nJettinessTau3"      );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_topMass"             );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_minMass"             );
-//    ttree->createBranch<std::vector<Int_t  >>( "ak8jets_nSubJets"            );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_prunedMass"          );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_trimmedMass"         );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_filteredMass"        );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_softdropMass"        );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau1" );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau2" );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau3" );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppipt"             );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppimass"           );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppieta"            );
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppiphi"            );
-//    ttree->createBranch<std::vector<LV     >>( "ak8jets_softdropPuppiSubjet1");
-//    ttree->createBranch<std::vector<LV     >>( "ak8jets_softdropPuppiSubjet2");
-//    ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppisoftdropMass"   );
+    if (isCMSX(3))
+    {
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_topMass"             );
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_minMass"             );
+        ttree->createBranch<std::vector<Int_t  >>( "ak8jets_nSubJets"            );
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_prunedMass"          );
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_trimmedMass"         );
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_filteredMass"        );
+        ttree->createBranch<std::vector<Float_t>>( "ak8jets_softdropMass"        );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau1" );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau2" );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppinJettinessTau3" );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppipt"             );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppimass"           );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppieta"            );
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppiphi"            );
+        ttree->createBranch<std::vector<LV     >>( "ak8jets_softdropPuppiSubjet1");
+        ttree->createBranch<std::vector<LV     >>( "ak8jets_softdropPuppiSubjet2");
+//        ttree->createBranch<std::vector<Float_t>>( "ak8jets_puppisoftdropMass"   );
 //    ttree->createBranch<std::vector<std::vector<int> >  > ( "ak8jetspfcandIndicies"                   ).setBranchAlias( "ak8jets_pfcandIndicies"            );
+    }
 
 }
 
@@ -734,31 +771,32 @@ void CORE2016::setFatJetBranches( RooUtil::TTreeX* ttree )
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau1"      , cms3.ak8jets_nJettinessTau1()[ifatjet]      );
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau2"      , cms3.ak8jets_nJettinessTau2()[ifatjet]      );
         ttree->pushbackToBranch<Float_t>( "ak8jets_nJettinessTau3"      , cms3.ak8jets_nJettinessTau3()[ifatjet]      );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_topMass"             , cms3.ak8jets_topMass()[ifatjet]             );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_minMass"             , cms3.ak8jets_minMass()[ifatjet]             );
-//        ttree->pushbackToBranch<Int_t  >( "ak8jets_nSubJets"            , cms3.ak8jets_nSubJets()[ifatjet]            );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_prunedMass"          , cms3.ak8jets_prunedMass()[ifatjet]          );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_trimmedMass"         , cms3.ak8jets_trimmedMass()[ifatjet]         );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_filteredMass"        , cms3.ak8jets_filteredMass()[ifatjet]        );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_softdropMass"        , cms3.ak8jets_softdropMass()[ifatjet]        );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau1" , cms3.ak8jets_puppinJettinessTau1()[ifatjet] );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau2" , cms3.ak8jets_puppinJettinessTau2()[ifatjet] );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau3" , cms3.ak8jets_puppinJettinessTau3()[ifatjet] );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppipt"             , cms3.ak8jets_puppipt()[ifatjet]             );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppimass"           , cms3.ak8jets_puppimass()[ifatjet]           );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppieta"            , cms3.ak8jets_puppieta()[ifatjet]            );
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppiphi"            , cms3.ak8jets_puppiphi()[ifatjet]            );
-//        ttree->pushbackToBranch<LV     >( "ak8jets_softdropPuppiSubjet1", cms3.ak8jets_softdropPuppiSubjet1()[ifatjet]);
-//        ttree->pushbackToBranch<LV     >( "ak8jets_softdropPuppiSubjet2", cms3.ak8jets_softdropPuppiSubjet2()[ifatjet]);
-//        ttree->pushbackToBranch<Float_t>( "ak8jets_puppisoftdropMass"   , cms3.ak8jets_puppisoftdropMass()[ifatjet]   );
+        if (isCMSX(3))
+        {
+            ttree->pushbackToBranch<Float_t>( "ak8jets_topMass"             , cms3.ak8jets_topMass()[ifatjet]             );
+            ttree->pushbackToBranch<Float_t>( "ak8jets_minMass"             , cms3.ak8jets_minMass()[ifatjet]             );
+            ttree->pushbackToBranch<Int_t  >( "ak8jets_nSubJets"            , cms3.ak8jets_nSubJets()[ifatjet]            );
+            ttree->pushbackToBranch<Float_t>( "ak8jets_prunedMass"          , cms3.ak8jets_prunedMass()[ifatjet]          );
+            ttree->pushbackToBranch<Float_t>( "ak8jets_trimmedMass"         , cms3.ak8jets_trimmedMass()[ifatjet]         );
+            ttree->pushbackToBranch<Float_t>( "ak8jets_filteredMass"        , cms3.ak8jets_filteredMass()[ifatjet]        );
+            ttree->pushbackToBranch<Float_t>( "ak8jets_softdropMass"        , cms3.ak8jets_softdropMass()[ifatjet]        );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau1" , cms3.ak8jets_puppinJettinessTau1()[ifatjet] );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau2" , cms3.ak8jets_puppinJettinessTau2()[ifatjet] );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppinJettinessTau3" , cms3.ak8jets_puppinJettinessTau3()[ifatjet] );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppipt"             , cms3.ak8jets_puppipt()[ifatjet]             );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppimass"           , cms3.ak8jets_puppimass()[ifatjet]           );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppieta"            , cms3.ak8jets_puppieta()[ifatjet]            );
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppiphi"            , cms3.ak8jets_puppiphi()[ifatjet]            );
+            ttree->pushbackToBranch<LV     >( "ak8jets_softdropPuppiSubjet1", cms3.ak8jets_softdropPuppiSubjet1()[ifatjet]);
+            ttree->pushbackToBranch<LV     >( "ak8jets_softdropPuppiSubjet2", cms3.ak8jets_softdropPuppiSubjet2()[ifatjet]);
+//            ttree->pushbackToBranch<Float_t>( "ak8jets_puppisoftdropMass"   , cms3.ak8jets_puppisoftdropMass()[ifatjet]   );
+        }
     }
 }
 
 //_________________________________________________________________________________________________
 void CORE2016::createTrigBranches( RooUtil::TTreeX* ttree, std::vector<TString> trigger_patterns_ )
 {
-//    ttree->createBranch<std::vector<TString>>( "hlt_trigNames" );
-//    ttree->createBranch<TBits               >( "hlt_bits"      );
 
     // Set the triggers
     trigger_patterns = trigger_patterns_;
@@ -784,8 +822,6 @@ void CORE2016::createTrigBranches( RooUtil::TTreeX* ttree, std::vector<TString> 
 //_________________________________________________________________________________________________
 void CORE2016::setTrigBranches( RooUtil::TTreeX* ttree )
 {
-//    ttree->setBranch<std::vector<TString>>( "hlt_trigNames", cms3.hlt_trigNames() );
-//    ttree->setBranch<TBits               >( "hlt_bits"     , cms3.hlt_bits()      );
     for ( auto& pair_trigname : triggers )
         ttree->setBranch<Int_t>( "pass_trig_" + pair_trigname.first, passHLTTriggerPattern( pair_trigname.second ) );
 }

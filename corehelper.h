@@ -99,6 +99,8 @@ class CORE2016
         std::vector<TString> trigger_patterns;
         std::vector<std::pair<TString, TString>> triggers;
 
+        bool isCMSX(int v) { if (cms3.evt_CMS3tag()[0].Contains(Form("CMS%d", v))) return true; else return false; }
+
         void initializeCORE(TString option);
         static int getCMS3Version();
         void setJetCorrector();
