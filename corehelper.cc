@@ -243,6 +243,57 @@ void CORE2016::setJetCorrector()
 }
 
 //_________________________________________________________________________________________________
+void CORE2016::createStdBranches(RooUtil::TTreeX* ttree)
+{
+    // Create output TTree branches.
+    createEventBranches(ttree);
+    createGenBranches(ttree);
+    createJetBranches(ttree);
+    createFatJetBranches(ttree);
+    createMETBranches(ttree);
+    createIsoTrackBranches(ttree);
+    createLeptonBranches(ttree,
+            {
+                {VVV_cutbased_tight         , "VVV_cutbased_tight"        },
+                {VVV_cutbased_fo            , "VVV_cutbased_fo"           },
+                {VVV_cutbased_fo_noiso      , "VVV_cutbased_fo_noiso"     },
+                {VVV_cutbased_fo_noiso_noip , "VVV_cutbased_fo_noiso_noip"},
+                {VVV_cutbased_veto          , "VVV_cutbased_veto"         }
+            }
+            );
+    createTrigBranches(ttree,
+            {
+                "HLT_Ele",
+                "HLT_Mu",
+                "HLT_TkMu",
+                "HLT_IsoMu",
+                "HLT_IsoTkMu",
+            }
+            );
+}
+
+//_________________________________________________________________________________________________
+void CORE2016::setStdBranches(RooUtil::TTreeX* ttree)
+{
+
+    // Clear previous event information
+    ttree->clear();
+
+    // Set the jet corrector based on the event.
+    setJetCorrector();
+
+    // Set the branches.
+    setEventBranches(ttree);
+    setGenBranches(ttree);
+    setJetBranches(ttree);
+    setFatJetBranches(ttree);
+    setMETBranches(ttree);
+    setIsoTrackBranches(ttree);
+    setLeptonBranches(ttree);
+    setTrigBranches(ttree);
+}
+
+//_________________________________________________________________________________________________
 void CORE2016::createEventBranches(RooUtil::TTreeX* ttree)
 {
     // Event info related
@@ -485,7 +536,7 @@ void CORE2016::setMuonBranches(RooUtil::TTreeX* ttree)
 
         // If you are here, the lepton is now accepted. Add to the collection
         ttree->pushbackToBranch<LV   >( "lep_p4", cms3.mus_p4()[imu] );
-        ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.mus_charge()[imu] * -11 );
+        ttree->pushbackToBranch<Int_t>( "lep_pdgId", cms3.mus_charge()[imu] * -13 );
         ttree->pushbackToBranch<Int_t>( "lep_3ch_agree", -999 );
         ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v1", -999 );
         ttree->pushbackToBranch<Int_t>( "lep_triggersafe_v2", -999 );

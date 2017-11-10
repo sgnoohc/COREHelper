@@ -104,6 +104,10 @@ class CORE2016
         void initializeCORE(TString option);
         static int getCMS3Version();
         void setJetCorrector();
+
+        void createStdBranches(RooUtil::TTreeX* ttree);
+        void setStdBranches(RooUtil::TTreeX* ttree);
+
         void createEventBranches(RooUtil::TTreeX* ttree);
         void setEventBranches(RooUtil::TTreeX* ttree);
         void createPileUpBranches(RooUtil::TTreeX* ttree);
